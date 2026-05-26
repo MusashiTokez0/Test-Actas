@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UBO</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- XLSX -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <h2>UBO</h2>
+            <p>Sistema de Formularios</p>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="card">
+
+                <h1>Registro de Equipos de Computación</h1>
+
+                <!-- FORMULARIO -->
+                <form id="formulario">
+
+                    <div class="grid">
+
+                        <div>
+                            <label>Nombre</label>
+                            <input type="text" id="nombre" required>
+                        </div>
+
+                        <div>
+                            <label>Fecha</label>
+                            <input type="date" id="fecha" required>
+                        </div>
+
+                        <div>
+                            <label>Cargo</label>
+                            <input type="text" id="Cargo" required>
+                        </div>
+
+                        <div>
+                            <label>Sede</label>
+                            <select id="Sede" required>
+                                <option value="" disabled selected>Seleccione una sede</option>
+                                <option value="rondizzoni">Rondizzoni</option>
+                                <option value="rondizzoni 2">Rondizzoni 2</option>
+                                <option value="Casa Central">Casa Central</option>
+                                <option value="Huemul">Huemul</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Area</label>
+                            <input type="text" id="Area">
+                        </div>
+
+                        <div>
+                            <label>N° Acta</label>
+                            <input type="text" id="numeroActa" readonly>
+                        </div>
+
+                        <div>
+                            <label>Tipo</label>
+                            <select id="Tipo">
+                                <option value="" disabled selected>Seleccione tipo de acta</option>
+                                <option value="Acta De Entrega">Acta De Entrega</option>
+                                <option value="Acta Componentes">Acta Componentes</option>
+                                <option value="Acta Prestamo">Acta Prestamo</option>
+                                <option value="Acta De Devolucion">Acta De Devolucion</option>
+                            </select>
+                        </div>
+
+                        <div class="campo-equipo campo-componentes campo-prestamo campo-devolucion" style="display: none;">
+                            <label>Tecnico</label>
+                            <select id="Tecnico">
+                                <option value="" disabled selected>Seleccione técnico</option>
+                                <option value="Bastian Palma">Bastian Palma</option>
+                                <option value="Benjamin Couchot">Benjamin Couchot</option>
+                                <option value="Diego Cisterna">Diego Cisterna</option>
+                                <option value="Pedro Romero">Pedro Romero</option>
+                                <option value="Elias Escobar">Elias Escobar</option>
+                            </select>
+                        </div>
+
+                        <div class="campo-equipo" style="display: none;">
+                            <label>Cantidad</label>
+                            <input type="number" id="Cantidad" value="1" min="1">
+                        </div>
+
+                        <div class="campo-equipo replicar-container" style="display: none; grid-column: span 2;">
+                            <input type="checkbox" id="replicarDatos" checked>
+                            <label for="replicarDatos">Replicar Equipo, Marca, Modelo y Serial en todos los equipos</label>
+                        </div>
+
+                        <div id="equipos-adicionales-container" class="campo-equipo" style="display: none; grid-column: span 2;">
+                        </div>
+
+                        <div class="campo-equipo" style="display: none;">
+                            <label>Equipo</label>
+                            <select id="dispositivoEntrega">
+                                <option value="" disabled selected>Seleccione un equipo</option>
+                                <option value="PC">PC</option>
+                                <option value="Notebook">Notebook</option>
+                                <option value="Monitor">Monitor</option>
+                                <option value="All-in-One">All-in-One</option>
+                                <option value="Impresora">Impresora</option>
+                                <option value="Otro">Otro equipo</option>
+                            </select>
+                            <input type="text" id="otroDispositivoEntrega" placeholder="Especifique equipo"
+                                style="display: none; margin-top: 10px;">
+                        </div>
+
+                        <div class="campo-equipo" style="display: none;">
+                            <label>Marca</label>
+                            <select id="Marca">
+                                <option value="" disabled selected>Seleccione una marca</option>
+                                <option value="Lenovo">Lenovo</option>
+                                <option value="HP">HP</option>
+                                <option value="Dell">Dell</option>
+                                <option value="Apple">Apple</option>
+                                <option value="Asus">Asus</option>
+                                <option value="Acer">Acer</option>
+                                <option value="MSI">MSI</option>
+                                <option value="Otra">Otra marca</option>
+                            </select>
+                            <input type="text" id="otraMarcaInput" placeholder="Especifique marca"
+                                style="display: none; margin-top: 10px;">
+                        </div>
+
+                        <div class="campo-equipo" style="display: none;">
+                            <label>Modelo</label>
+                            <input type="text" id="Modelo">
+                        </div>
+
+                        <div class="campo-equipo" style="display: none;">
+                            <label>Serial</label>
+                            <input type="text" id="Serial">
+                        </div>
+
+                        <div class="campo-equipo" style="display: none;">
+                            <label>PIN</label>
+                            <input type="text" id="Pin">
+                        </div>
+
+                        <!-- Campos para Acta Componentes -->
+                        <div class="campo-componentes" style="display: none;">
+                            <label>Dispositivo</label>
+                            <select id="dispositivo">
+                                <option value="" disabled selected>Seleccione un dispositivo</option>
+                                <option value="Camara web">Camara web</option>
+                                <option value="Jabra">Jabra</option>
+                                <option value="Auricular">Auricular</option>
+                            </select>
+                        </div>
+                        <div class="campo-componentes" style="display: none;">
+                            <label>Modelo</label>
+                            <input type="text" id="modeloComponente">
+                        </div>
+                        <div class="campo-componentes" style="display: none;">
+                            <label>Serial</label>
+                            <input type="text" id="serialComponente">
+                        </div>
+
+                        <!-- Campos para Acta Prestamo -->
+                        <div class="campo-prestamo" style="display: none;">
+                            <label>Fecha Devolución</label>
+                            <input type="date" id="fechaDevolucion">
+                        </div>
+                        <div class="campo-prestamo" style="display: none;">
+                            <label>Dispositivo a prestar</label>
+                            <select id="dispositivoPrestamo">
+                                <option value="" disabled selected>Seleccione un dispositivo</option>
+                                <option value="Proyector">Proyector</option>
+                                <option value="Telón">Telón</option>
+                                <option value="Monitor">Monitor</option>
+                                <option value="PC">PC</option>
+                                <option value="Notebook">Notebook</option>
+                            </select>
+                        </div>
+                        <div class="campo-prestamo" style="display: none;">
+                            <label>Serial</label>
+                            <input type="text" id="serialPrestamo">
+                        </div>
+
+                        <!-- Campos para Acta De Devolucion -->
+                        <div class="campo-devolucion" style="display: none;">
+                            <label>Equipo</label>
+                            <input type="text" id="equipoDevolucion">
+                        </div>
+                        <div class="campo-devolucion" style="display: none;">
+                            <label>Modelo</label>
+                            <input type="text" id="modeloDevolucion">
+                        </div>
+                        <div class="campo-devolucion" style="display: none;">
+                            <label>Serial</label>
+                            <input type="text" id="serialDevolucion">
+                        </div>
+
+                    </div>
+
+                    <div class="full-width">
+
+                        <label>Observaciones</label>
+
+                        <textarea id="observaciones"></textarea>
+
+                    </div>
+
+                    <div class="botones">
+
+                        <button type="submit">
+                            Guardar Registro
+                        </button>
+
+                        <button id="btnLimpiar">
+                            Limpiar registros
+                        </button>
+
+                        <button type="button" id="btnExcel">
+                            Excel
+                        </button>
+
+
+
+                    </div>
+
+                </form>
+
+                <!-- BUSQUEDA -->
+                <div class="search-container">
+                    <input type="text" id="busqueda" placeholder="Buscar en registros...">
+                </div>
+
+                <!-- TABLA -->
+                <table class="tabla">
+
+                    <thead>
+
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Fecha</th>
+                            <th>Cargo</th>
+                            <th>Sede</th>
+                            <th>Área</th>
+                            <th>Tipo</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Serial</th>
+                            <th>PIN</th>
+                            <th>PDF</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="tabla-registros">
+
+                    </tbody>
+
+                </table>
+
+                <!-- PAGINACION -->
+                <div id="paginacion" class="pagination"></div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- JS -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>
